@@ -1,0 +1,58 @@
+{% extends 'shop/basic.html' %}
+
+{% block title%}{{product.product_name}} - my awesome cart{% endblock %}
+{% block body%}
+<div class="container my-4">
+    <div class="row">
+    <div class="col-md-4">
+    <div class="row">
+        <img src="/media/{{product.image}}" width="233px" height="385px">
+    </div>
+        <div class="row">
+            <button class="btn btn-primary mx-2">Buy Now</button>
+            <button class="btn btn-primary ">Add To Cart</button>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <h5>{{product.product_name}}</h5>
+        <p>{{product.desc}}</p>
+        <p><b>${{product.price}}</b></p>
+    </div>
+    </div>
+</div>
+
+{%endblock%}
+
+{% block js %}
+<script>
+
+console.log('working')
+if(localStorage.getItem('cart') == null)//local storage me agar cart nam ka kuch hai to cart bana do var cart = {} se(dictionary hai)//
+{
+var cart={};
+}
+else{//and if there exists cart dictionary in local storage then load it using json.parse//
+cart= JSON.parse(localStorage.getItem('cart'));
+document.getElementById('cart').innerHTML = Object.keys(cart).length;
+}
+//jquery starts here//
+$('.cart').click(function(){//if someone click the cart class then do as below//
+
+console.log('clicked');//to test//
+var idstr = this.id.toString();//retrieves the id from the click(button tag id)//
+console.log(idstr);//to test//
+if(cart[idstr] != undefined){//if there already exists a pair for idstr key then add 1 (here cart is key value pairs of idstr and no of clicks for that particular id//
+cart[idstr] = cart[idstr]+1;
+}
+else{//else it is clicked for the first time then put the value for idstr as 1//
+cart[idstr] = 1;
+}
+console.log(cart);
+localStorage.setItem('cart' , JSON.stringify(cart));
+document.getElementById('cart').innerHTML = Object.keys(cart).length;//gives the length of the cart (number of key value pairs or number of idstr in "cart"hence number of different products)and the assign it to the inner html i.elength of cart//
+});
+$('#popcart').popover();
+document.getElementById("popcart").setAttribute('data-content','<h5>Cart</h5>');
+
+</script>
+{% endblock %}
